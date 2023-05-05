@@ -2,6 +2,7 @@
 using CodeTest.Models;
 using CodeTest.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodeTest.Controllers
 {
@@ -16,33 +17,42 @@ namespace CodeTest.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Package> Get(int id)
+        public IActionResult Get(string id)
         {
-            var package = new Package
+            if (id == null)
             {
-                Id = 1,
-                Height = 1,
-                Length = 1,
-                Weight = 1,
-                Width = 1
-            };
+                return BadRequest();
+            }
 
-            return package;
+            try
+            {
+                var package = _packageService.GetById(id);
+                return Ok(package);
+            }
+            catch (ValidationException ex)
+            {
+                return ValidationProblem(ex.Message);
+            }
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Package>> GetRange()
+        public IActionResult GetRange()
         {
-            return new List<Package>() { new Package { Id = 1}, new Package { Id = 2 } };
+            var packages = _packageService.GetRange();
+            return Ok(packages);
         }
 
         [HttpPost]
-        public ActionResult<Package> Create([FromBody] CreatePackageViewModel vm)
+        public IActionResult Create([FromBody] CreatePackageViewModel vm)
         {
-            //Maybe map
-            //_packageService.Add
+            if (vm == null)
+            {
+                return BadRequest();
+            }
 
-            return new Package { Id = 5 };
+            //Maybe map
+            var createdPackage = _packageService.Add(vm);
+            return Ok(createdPackage);
         }
     }
 
