@@ -23,18 +23,13 @@ namespace CodeTest.Services
 
         public Package GetById(string id)
         {
-            // TODO : Validate id
-            // 18 digits
-            // numbers only
-            // Begins with 999
-            // ValidationException
+            ValidateId(id);
 
             var package = _repository.GetById(id);
 
             if (package == null)
             {
                 // Custom exception? NotFoundException
-                //throw new ValidationException("Package not found!");
             }
 
             return package;
@@ -43,6 +38,22 @@ namespace CodeTest.Services
         public IEnumerable<Package> GetRange()
         {
             return _repository.GetRange();
+        }
+
+        private void ValidateId(string id)
+        {
+            if (id.Length != 18)
+            {
+                throw new ValidationException("Package id must contain exactly 18 characters!");
+            }
+            else if (id.Any(c => !char.IsDigit(c)))
+            {
+                throw new ValidationException("Package id must contain numerical values only!");
+            }
+            else if (!id.Substring(0, 3).Equals("999"))
+            {
+                throw new ValidationException("Package id must begin with 999!");
+            }
         }
     }
 }

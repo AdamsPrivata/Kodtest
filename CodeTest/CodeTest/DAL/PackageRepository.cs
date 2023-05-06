@@ -7,7 +7,7 @@ namespace CodeTest.DAL
         // Fake storage
         private List<Package> Packages { get; set; } = new List<Package>();
 
-        private const long START_ID = 999000000000000001;
+        private const string START_ID = "999000000000000001";
 
         public Package Add(Package package)
         {
@@ -35,7 +35,7 @@ namespace CodeTest.DAL
             }
             else
             {
-                package.Id = START_ID.ToString();
+                package.Id = START_ID;
             }
 
             Packages.Add(package);

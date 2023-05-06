@@ -19,7 +19,7 @@ namespace CodeTest.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return BadRequest();
             }
