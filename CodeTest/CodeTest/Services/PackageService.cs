@@ -1,6 +1,7 @@
 ﻿using CodeTest.Controllers.ViewModels;
 using CodeTest.DAL;
 using CodeTest.Models;
+using CodeTest.Utilities;
 using System.ComponentModel.DataAnnotations;
 
 namespace CodeTest.Services
@@ -18,6 +19,11 @@ namespace CodeTest.Services
         {
             var package = new Package(packageVM.Weight, packageVM.Height, packageVM.Width, packageVM.Length);
 
+            if (!package.IsValid)
+            {
+                throw new ValidationException("The provided package was not within allowed dimensions and/or weight!");
+            }
+
             return _repository.Add(package);
         }
 
@@ -29,7 +35,7 @@ namespace CodeTest.Services
 
             if (package == null)
             {
-                // Custom exception? NotFoundException
+                throw new PackageNotFoundException("Package with provided id could not be found!");
             }
 
             return package;
